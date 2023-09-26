@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma';
 import { openai } from '../lib/openai';
 
 export async function generateAICompletionRoute(app: FastifyInstance) {
-  app.post('/ai-completion', async (request, reply) => {
+  app.post('/ai/complete', async (request, reply) => {
     const bodySchema = z.object({
       videoId: z.string().uuid(),
       prompt: z.string(),
@@ -44,6 +44,13 @@ export async function generateAICompletionRoute(app: FastifyInstance) {
     });
 
     const stream = OpenAIStream(response);
+
+    // app.register(function (req, res, next) {
+    //   res.setHeader('Access-Control-Allow-Origin', '*');
+    //   res.setHeader('Access-Control-Allow-Methods', '*');
+    //   res.setHeader('Access-Control-Allow-Headers', '*');
+    //   next();
+    // });
 
     streamToResponse(stream, reply.raw, {
       headers: {
